@@ -20,11 +20,16 @@
         <div class="heading">Create an Account</div>
         <div class="content">
             <form action="" method="post">
+                {% csrf_token %}
                 <input type="text" name="name" required placeholder="Name"> <br>
                 <input type="email" name="email" required placeholder="E-mail"> <br>
                 <input type="password" name="password" id="password" required placeholder="Password"> <br>
+                By Registering you agree to our Terms and Conditions.<br>
                 <input type="submit" value="Register">
             </form>
+            {% if error %}
+                <p class="error">Account already exists with this E-mail.</p>
+            {% endif %}
         </div>
     </div>
 </body>

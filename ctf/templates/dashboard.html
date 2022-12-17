@@ -1,0 +1,63 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="nav">
+        <img src="{%static '/logo.png' %}" alt="VoidCTF">
+        <div class="btns">
+            <a href="profile">Profile</a>
+            <form action="../" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Logout">
+            </form>
+        </div>
+    </div>
+    <div class="main">
+        <div class="row content">
+            <label>Name: {{user.name}}</label>
+            <label>Team: {{user.team}}</label>
+        </div>
+    </div>
+    {% if user.team != None %}
+    {% for item in challenge %}
+    <div class="main">
+        <div class="heading">{{item.name}} [{{item.points}}]</div>
+        <div class="row">
+            <div class="content side">
+                {{item.category}}<br>
+                
+                {{item.description}}<br>
+                {% if item.hint != None %}
+                <b>{{item.hint}}</b><br>
+                {% endif %}
+                <br>
+                <a href="{{item.endpoint}}">URL/URI</a>
+                <br>
+            </div>
+            <div class="content side">
+                <input type="text" placeholder="Flag">
+                <input type="submit" value="Check Flag"><br>
+                Solves: {{item.solves}} <br>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="main">
+        <div class="content"><p class="error">
+            Join a team to view challenges. <br>
+            Goto profile to create/join a team.
+        </p></div>
+    </div>
+    
+    {% endif %}
+</body>
+</html>

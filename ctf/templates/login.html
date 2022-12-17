@@ -20,10 +20,14 @@
         <div class="heading">Login to your Account</div>
         <div class="content">
             <form action="" method="post">
+                {% csrf_token %}
                 <input type="email" name="email" required placeholder="E-mail"> <br>
                 <input type="password" name="password" id="password" required placeholder="Password"> <br>
                 <input type="submit" value="Login">
             </form>
+            {% if error %}
+                <p class="error">Incorrect Details. <br> Too many wrong attempts may get your IP blocked.</p>
+            {% endif %}
         </div>
     </div>
 </body>
