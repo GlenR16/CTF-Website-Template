@@ -1,0 +1,30 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+    <title>VoidCTF Login</title>
+</head>
+<body>
+    <div class="nav">
+        <img src="{%static '/logo.png' %}" alt="VoidCTF">
+        <div class="btns">
+            Don't have an account? <a href="signup">Signup</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="heading">Login to your Account</div>
+        <div class="content">
+            <form action="" method="post">
+                <input type="email" name="email" required placeholder="E-mail"> <br>
+                <input type="password" name="password" id="password" required placeholder="Password"> <br>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
