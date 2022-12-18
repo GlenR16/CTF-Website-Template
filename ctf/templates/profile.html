@@ -1,12 +1,64 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
     <title>Profile</title>
 </head>
 <body>
-    
+    <div class="nav">
+        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
+        <div class="btns">
+            <a href="dashboard">Dashboard</a>
+            <form action="../" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Logout">
+            </form>
+        </div>
+    </div>
+    {% if user.team == None %}
+    <div class="main">
+        {% if error %}
+        <div class="content">
+            <p class="error">Incorrect Team Information.</p>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="content side">
+                <div class="heading"> Create Team</div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Team Name"> <br>
+                    <input type="submit" value="Create">
+                </form>
+            </div>
+            <div class="content side">
+                <div class="heading">Join Team</div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="tid" placeholder="Team ID"> <br>
+                    <input type="submit" value="Join">
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="main">
+        <div class="row">
+            <div class="content side">
+                User Name: {{user.name}} <br>
+                Team Name: {{user.team.name}} <br>
+                Score: {{user.team.score}} <br>
+            </div>
+            <div class="content side">
+                
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </body>
 </html>

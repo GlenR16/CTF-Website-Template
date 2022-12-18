@@ -14,7 +14,6 @@ class Challenge(admin.ModelAdmin):
 class Team(admin.ModelAdmin):
     list_display = ("name", "score")
     list_filter = ("disqualified", )
-    fields = ("disqualified",)
     search_fields = ("tid__startswith", )
 
 @admin.register(UserModel)

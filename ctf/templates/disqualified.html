@@ -1,0 +1,36 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+    <script src="{%static '/main.js' %}"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="nav">
+        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
+        <div class="btns">
+            <a href="..">Home</a>
+            <form action="../" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Logout">
+            </form>
+        </div>
+    </div>
+    <div class="main">
+        <div class="row content">
+            <label>Name: {{user.name}}</label>
+            <label>Team: {{user.team}}</label>
+        </div>
+    </div>
+    <div class="main">
+        <div class="heading" id="timer">
+            Your team has been disqualified. <br> Contact a moderator/administrator on discord. <br> Your Team ID is: {{team.tid}} .
+        </div>
+    </div>
+</body>
+</html>

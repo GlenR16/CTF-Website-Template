@@ -16,8 +16,8 @@
     display: none;
 }
 body{
-    background: linear-gradient(320.54deg, #00069F 0%, #120010 72.37%), linear-gradient(58.72deg, #69D200 0%, #970091 100%), linear-gradient(121.28deg, #8CFF18 0%, #6C0075 100%), linear-gradient(121.28deg, #8000FF 0%, #000000 100%), linear-gradient(180deg, #00FF19 0%, #24FF00 0.01%, #2400FF 100%), linear-gradient(52.23deg, #0500FF 0%, #FF0000 100%), linear-gradient(121.28deg, #32003A 0%, #FF4040 100%), radial-gradient(50% 72.12% at 50% 50%, #EB00FF 0%, #110055 100%);
-    background-blend-mode: screen, color-dodge, color-burn, screen, overlay, difference, color-dodge, normal;
+    background: radial-gradient(111% 111% at 74.29% -11%, #A93300 0%, #005570 100%), linear-gradient(127.43deg, #00D5C8 0%, #2200AA 100%);
+    background-blend-mode: difference, normal;
     background-repeat: no-repeat;
     background-attachment: fixed;
     margin:0px;
@@ -41,7 +41,7 @@ body{
     background-color: var(--backdrop);
     border-radius: 15px;
 }
-.nav > img{
+.nav >a> img{
     width: 185px;
     padding: 0px 0px 0px 10px;
 }
@@ -51,7 +51,7 @@ body{
     margin: 10px;
     font-size: 25px;
 }
-a{
+.btns > a{
     text-decoration: none;
     color: var(--fg);
     padding: 0px;
@@ -61,7 +61,7 @@ a{
     margin: 0px 10px;
     padding: 10px;
 }
-a:hover{
+.btns > a:hover{
     color: var(--bg);
     background-color: var(--fg);
 }

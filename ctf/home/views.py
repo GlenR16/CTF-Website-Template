@@ -55,11 +55,20 @@ def dashboard(request):
     session = session_verification(request)
     if session!='':
         user = User.objects.get(email=session)
-        if user.team != '':
-            challenge = Challenge.objects.all()
-            return render(request,"dashboard.html",{'user':user,'challenge':challenge})
+        challenge = Challenge.objects.all()
+        if CTF.objects.first().wave1 == True:
+            if CTF.objects.first().wave2 == True:
+                if user.team != '':
+                    return render(request,"dashboard.html",{'user':user,'challenge':challenge})
+                else:
+                    return render(request,"dashboard.html",{'user':user})
+            else:
+                if user.team != '':
+                    return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15]})
+                else:
+                    return render(request,"dashboard.html",{'user':user})
         else:
-            return render(request,"dashboard.html",{'user':user})
+            return render(request,"timer.html",{'user':user})
     else:
         return redirect(login)
     
@@ -70,11 +79,46 @@ def session_verification(request):
         session = ''
     return session
 
+def flag(request):
+    session = session_verification(request)
+    if request.method=="POST" and session!='':
+        flag = request.POST.get("flag","")
+        cid = request.POST.get("cid","")
+        try:
+            user = User.objects.get(email=session)
+            challenge = Challenge.objects.get(cid=cid)
+        except:
+            return False
+        if flag != "" and challenge.flag == flag:
+            Team.objects.get()
+            challenge.solved()
+
 def profile(request):
     session = session_verification(request)
     if session!='':
         user = User.objects.get(email=session)
-        return render(request,"profile.html",{'user':user})
+        if request.method=='POST':
+            tid = request.POST.get("tid", "")
+            name = request.POST.get("name", "")
+            if name != "":
+                new_team = Team(name=name)
+                new_team.save()
+                tid = new_team.tid
+            else:
+                try:
+                    new_team = Team.objects.get(tid=tid)
+                except:
+                    return render(request,"profile.html",{'user':user,'error':True})
+            if len(User.objects.filter(team=new_team))<5:
+                try:
+                    user.team = Team.objects.get(tid=tid)
+                    user.save()
+                except:
+                    return render(request,"profile.html",{'user':user,'error':True})
+            return render(request,"profile.html",{'user':user})
+        else:
+            user = User.objects.get(email=session)
+            return render(request,"profile.html",{'user':user})
     else:
         return redirect(login)
     

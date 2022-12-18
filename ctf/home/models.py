@@ -30,7 +30,7 @@ class Challenge(models.Model):
     name = models.CharField(max_length=50)
     flag = models.CharField(max_length=63)
     category = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=511)
     hint = models.CharField(max_length=127,blank=True,null=True)
     endpoint = models.CharField(max_length=63)
     points = models.IntegerField()
