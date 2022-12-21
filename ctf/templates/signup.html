@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="{%static '/main.js' %}"></script>
     <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
     <title>VoidCTF Signup</title>
 </head>
@@ -23,8 +25,8 @@
                 {% csrf_token %}
                 <input type="text" name="name" required placeholder="Name"> <br>
                 <input type="email" name="email" required placeholder="E-mail"> <br>
-                <input type="password" name="password" id="password" required placeholder="Password"> <br>
-                By Registering you agree to our Terms and Conditions.<br>
+                <input type="password" name="password" id="password" required placeholder="Password" onchange="verifyPassword(this.value);"> <br>
+                By Registering you agree to our <a href="../#terms">Terms and Conditions</a> .<br>
                 <input type="submit" value="Register">
             </form>
             {% if error %}

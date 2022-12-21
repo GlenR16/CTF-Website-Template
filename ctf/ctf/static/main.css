@@ -16,8 +16,8 @@
     display: none;
 }
 body{
-    background: radial-gradient(111% 111% at 74.29% -11%, #A93300 0%, #005570 100%), linear-gradient(127.43deg, #00D5C8 0%, #2200AA 100%);
-    background-blend-mode: difference, normal;
+    background: rgb(46,0,14);
+    background: linear-gradient(45deg, rgba(46,0,14,1) 0%, rgba(0,61,124,1) 50%, rgba(77,0,101,1) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     margin:0px;

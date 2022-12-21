@@ -10,14 +10,13 @@ def index(request):
         request.session.flush()
     return render(request,'index.html')
 
-emailre = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-
 def signup(request):
-    if request.method == 'POST':
+    session = session_verification(request)
+    if request.method == 'POST' and session == "":
         email = request.POST.get("email", "")
         name = request.POST.get("name", "")
         password = request.POST.get("password", "")
-        if (email!='' and name!='' and password!='' and re.fullmatch(emailre, email) and not User.objects.filter(email=email)):
+        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)):
             new_user = User(email=email,name=name,password=password)
             new_user.save()
             request.session['email'] = new_user.email
@@ -25,27 +24,25 @@ def signup(request):
         else:
             return render(request,'signup.html',{'error':True})
     else:
-        session = session_verification(request)
         if session!='':
             return redirect(dashboard)
         else:
             return render(request,'signup.html')
 
 def login(request):
-    if request.method == 'POST':
+    session = session_verification(request)
+    if request.method == 'POST' and session == "":
         email = request.POST.get("email", "")
         password = request.POST.get("password", "")
         try:
             user = User.objects.get(email=email)
+            if (user!='' and password==user.password):
+                request.session['email'] = user.email
+                return redirect(dashboard)
         except:
-            user = ''
-        if (user!='' and password==user.password):
-            request.session['email'] = user.email
-            return redirect(dashboard)
-        else:
-            return render(request,'login.html',{'error':True})
+            pass
+        return render(request,'login.html',{'error':True})
     else:
-        session = session_verification(request)
         if session!='':
             return redirect(dashboard)
         else:
@@ -55,18 +52,14 @@ def dashboard(request):
     session = session_verification(request)
     if session!='':
         user = User.objects.get(email=session)
-        challenge = Challenge.objects.all()
+        if user.team != None and user.team.disqualified == True:
+            return render(request,'disqualified.html',{'user':user})
         if CTF.objects.first().wave1 == True:
+            challenge = Challenge.objects.all()
             if CTF.objects.first().wave2 == True:
-                if user.team != '':
                     return render(request,"dashboard.html",{'user':user,'challenge':challenge})
-                else:
-                    return render(request,"dashboard.html",{'user':user})
             else:
-                if user.team != '':
-                    return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15]})
-                else:
-                    return render(request,"dashboard.html",{'user':user})
+                return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15]})
         else:
             return render(request,"timer.html",{'user':user})
     else:
@@ -87,17 +80,20 @@ def flag(request):
         try:
             user = User.objects.get(email=session)
             challenge = Challenge.objects.get(cid=cid)
+            team = Team.objects.get(tid=user.team.tid)
         except:
-            return False
-        if flag != "" and challenge.flag == flag:
-            Team.objects.get()
+            return redirect(dashboard)
+        if flag != "" and challenge.flag == flag and user.team.disqualified != True:
+            team.score += challenge.points
+            team.save()
             challenge.solved()
+        return redirect(dashboard)
 
 def profile(request):
     session = session_verification(request)
     if session!='':
         user = User.objects.get(email=session)
-        if request.method=='POST':
+        if request.method=='POST' and user.team == None:
             tid = request.POST.get("tid", "")
             name = request.POST.get("name", "")
             if name != "":
@@ -118,7 +114,8 @@ def profile(request):
             return render(request,"profile.html",{'user':user})
         else:
             user = User.objects.get(email=session)
-            return render(request,"profile.html",{'user':user})
+            rank = list(Team.objects.all().order_by('score').values_list('tid', flat=True)).index(user.team.tid) + 1
+            return render(request,"profile.html",{'user':user,'rank':rank})
     else:
         return redirect(login)
     

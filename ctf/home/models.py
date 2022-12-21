@@ -37,7 +37,8 @@ class Challenge(models.Model):
     solves = models.IntegerField(default=0)
     def __str__(self):
         return f"{self.name}"
-    def solved():
+    def solved(self):
         self.solves += 1
         if self.points > 20 and self.solves % 5 == 0 :
             self.points-=1
+        self.save()
