@@ -7,6 +7,9 @@ class CTF(models.Model):
     wave1 = models.BooleanField(default=False)
     wave2 = models.BooleanField(default=False)
     ended  = models.BooleanField(default=False)
+    def total_users(self):
+        result = User.objects.all().count()
+        return result
     
 class Team(models.Model):
     tid = models.CharField(default=uuid.uuid4().hex[:8],primary_key=True,unique=True,max_length=8)

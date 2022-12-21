@@ -1,8 +1,10 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,Http404,FileResponse
 import re
 from .models import User,Team,Challenge,CTF
 from django.views.decorators.csrf import requires_csrf_token
+import os
+import mimetypes
 
 @requires_csrf_token
 def index(request):
@@ -16,7 +18,7 @@ def signup(request):
         email = request.POST.get("email", "")
         name = request.POST.get("name", "")
         password = request.POST.get("password", "")
-        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)):
+        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)) and CTF.objects.first().registration == True:
             new_user = User(email=email,name=name,password=password)
             new_user.save()
             request.session['email'] = new_user.email
@@ -27,7 +29,7 @@ def signup(request):
         if session!='':
             return redirect(dashboard)
         else:
-            return render(request,'signup.html')
+            return render(request,'signup.html',{"CTF":CTF.objects.first()})
 
 def login(request):
     session = session_verification(request)
@@ -57,9 +59,9 @@ def dashboard(request):
         if CTF.objects.first().wave1 == True:
             challenge = Challenge.objects.all()
             if CTF.objects.first().wave2 == True:
-                    return render(request,"dashboard.html",{'user':user,'challenge':challenge})
+                    return render(request,"dashboard.html",{'user':user,'challenge':challenge,"CTF":CTF.objects.first()})
             else:
-                return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15]})
+                return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15],"CTF":CTF.objects.first()})
         else:
             return render(request,"timer.html",{'user':user})
     else:
@@ -74,7 +76,7 @@ def session_verification(request):
 
 def flag(request):
     session = session_verification(request)
-    if request.method=="POST" and session!='':
+    if request.method=="POST" and session!='' and CTF.objects.first().ended != True and ( CTF.objects.first().wave1 == True or CTF.objects.first().wave2 == True):
         flag = request.POST.get("flag","")
         cid = request.POST.get("cid","")
         try:
@@ -87,6 +89,8 @@ def flag(request):
             team.score += challenge.points
             team.save()
             challenge.solved()
+        return redirect(dashboard)
+    else:
         return redirect(dashboard)
 
 def profile(request):
@@ -114,8 +118,11 @@ def profile(request):
             return render(request,"profile.html",{'user':user})
         else:
             user = User.objects.get(email=session)
-            rank = list(Team.objects.all().order_by('score').values_list('tid', flat=True)).index(user.team.tid) + 1
-            return render(request,"profile.html",{'user':user,'rank':rank})
+            return render(request,"profile.html",{'user':user})
     else:
         return redirect(login)
-    
+
+def downloads(request,filename):
+    url = os.path.join(os.path.dirname(os.path.dirname(__file__)),'downloads\\'+filename)
+    file = open(url,'rb')
+    return FileResponse(file)

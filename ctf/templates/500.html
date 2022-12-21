@@ -1,4 +1,5 @@
 {%load static%}
+{% load template_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,28 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="{%static '/main.css' %}">
-    <title>Dashboard</title>
+    <title>VoidCTF</title>
 </head>
 <body>
     <div class="nav">
         <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
         <div class="btns">
             <a href="..">Home</a>
-            <form action="../" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Logout">
-            </form>
         </div>
     </div>
     <div class="main">
-        <div class="row content">
-            <label>Name: {{user.name}}</label>
-            <label>Team: {{user.team}}</label>
-        </div>
-    </div>
-    <div class="main">
-        <div class="heading error">
-            Your team has been disqualified. <br> Contact a moderator/administrator on discord. <br> Your Team ID is: {{user.team.tid}}
+        <div class="heading">500 Server Error</div>
+        <div class="content">
+            It seems you broke the server. <br>
+            If an attack on the website is detected your team and IP will be banned.
+            <span style="display: none;">
+                {% random_string %}
+            </span>
+            
         </div>
     </div>
 </body>

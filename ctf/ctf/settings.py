@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['192.168.29.142', 'localhost', '127.0.0.1',]
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,7 +122,22 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR /'static'
 STATICFILES_DIRS = ['ctf/static',]
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "superhero",
+    
+}
+JAZZMIN_SETTINGS = {
+    "site_title": "VoidCTF",
+    "site_logo": "admin.png",
+    "site_brand": "VoidCTF Admin",
+    "custom_css": "/admin.css",
+    "topmenu_links": [
+        {"name": "Website",  "url": "index"},
+    ],
+}

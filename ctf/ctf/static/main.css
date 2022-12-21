@@ -77,7 +77,7 @@ body{
     padding: 0px;
 }
 .heading{
-    font-size: 35px;
+    font-size: 35px !important;
     font-weight: 600;
     margin: 0px;
     border: 3px solid var(--fg);
@@ -131,7 +131,7 @@ input[type="password"]:focus,input[type="email"]:focus,input[type="text"]:focus{
 i{
     color: var(--fg);
 }
-p.error{
+.error{
     color: var(--error);
     font-size: 25px;
 }

@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="{%static '/main.css' %}">
-    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
     <title>Dashboard</title>
 </head>
 <body>
@@ -27,6 +26,13 @@
             <label>Team Score: {{user.team.score}}</label>
         </div>
     </div>
+    {% if CTF.ended == True %}
+    <div class="main">
+        <div class="row heading">
+            The CTF has ended. <br> You can still solve the challenges however the system will not accept the flags.
+        </div>
+    </div>
+    {% endif %}
     {% if user.team != None %}
     {% for item in challenge %}
     <div class="main">
@@ -61,7 +67,11 @@
             Goto profile to create/join a team.
         </p></div>
     </div>
-    
     {% endif %}
+    <div class="main">
+        <div class="content">
+            Total Players: {{CTF.total_users}}
+        </div>
+    </div>
 </body>
 </html>

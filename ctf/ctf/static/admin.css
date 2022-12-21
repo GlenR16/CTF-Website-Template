@@ -1,0 +1,8 @@
+body.theme-superhero select {
+    color: white;
+    background-color: #353a41;
+}
+body.theme-superhero input[type="text"],input[type="email"],input[type="number"],.selection  {
+    background-color: #454d55;
+    color: white;
+}
