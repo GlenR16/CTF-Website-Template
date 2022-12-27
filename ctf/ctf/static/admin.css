@@ -1,8 +1,44 @@
-body.theme-superhero select {
+body.theme-cyborg span.dropdown-header {
     color: white;
-    background-color: #353a41;
+    font-size: 25px;
+    font-weight: 500;
 }
-body.theme-superhero input[type="text"],input[type="email"],input[type="number"],.selection  {
-    background-color: #454d55;
+body.theme-cyborg footer{
+    display: none;
+}
+body.theme-cyborg input[type="text"],input[type="number"],input[type="password"],input[type="email"]{
+    background-color: #343a40;
     color: white;
+    border: 3px solid white;
+    border-radius: 5px;
+    height: 40px;
+    padding: 5px;
+    box-shadow: none;
+    outline: none ;
+}
+body.theme-cyborg .selector-available > *{
+    background-color: #343a40;
+    color: white;
+}
+body.theme-cyborg .selector-chosen > *{
+    background-color: #343a40;
+    color: white;
+}
+body {
+    background-color: #292829;
+}
+body > .login-box > .card{
+    border: 3px solid white;
+    outline: none;
+    box-shadow: none;
+}
+input[type="text"]{
+    background-color: #343a40;
+    color: white;
+    border: 3px solid white;
+    border-radius: 5px;
+    height: 40px;
+    padding: 5px;
+    box-shadow: none;
+    outline: none ;
 }

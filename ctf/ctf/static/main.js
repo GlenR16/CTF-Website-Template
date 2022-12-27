@@ -11,7 +11,7 @@ if (document.getElementById("timer") != "")
     if (distance < 0) 
     {
       clearInterval(x);
-      document.getElementById("timer").innerHTML = "EXPIRED";
+      document.getElementById("timer").innerHTML = "CTF has begun. <br> Please Reload the website.";
     }
   }, 1000);
 }

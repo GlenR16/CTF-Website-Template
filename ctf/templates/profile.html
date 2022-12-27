@@ -32,7 +32,7 @@
                 <div class="heading"> Create Team</div>
                 <form action="" method="post">
                     {% csrf_token %}
-                    <input type="text" name="name" placeholder="Team Name"> <br>
+                    <input type="text" name="name" placeholder="Team Name" maxlength="50"> <br>
                     <input type="submit" value="Create">
                 </form>
             </div>
@@ -40,7 +40,7 @@
                 <div class="heading">Join Team</div>
                 <form action="" method="post">
                     {% csrf_token %}
-                    <input type="text" name="tid" placeholder="Team ID"> <br>
+                    <input type="text" name="tid" placeholder="Team ID" maxlength="8"> <br>
                     <input type="submit" value="Join">
                 </form>
             </div>
@@ -60,6 +60,7 @@
             </div>
         </div>
     </div>
+    
     {% endif %}
 </body>
 </html>

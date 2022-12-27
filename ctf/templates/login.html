@@ -21,8 +21,8 @@
         <div class="content">
             <form action="" method="post">
                 {% csrf_token %}
-                <input type="email" name="email" required placeholder="E-mail"> <br>
-                <input type="password" name="password" id="password" required placeholder="Password"> <br>
+                <input type="email" name="email" required placeholder="E-mail" maxlength="50"> <br>
+                <input type="password" name="password" id="password" required placeholder="Password" maxlength="50" minlength="8"> <br>
                 <input type="submit" value="Login">
             </form>
             {% if error %}

@@ -3,6 +3,8 @@
     --fg: #1aff00;
     --backdrop: rgba(0, 0, 0, 0.3);
     --error: #ff0000;
+    --grad1: #3a0f00;
+    --grad2: #00303a;
 }
 @font-face {
     font-family: JetBrains;
@@ -134,4 +136,37 @@ i{
 .error{
     color: var(--error);
     font-size: 25px;
+}
+table{
+    width: 100%;
+}
+th {
+    color:var(--fg);
+    background:var(--bg);
+    border-bottom:2px solid var(--fg);
+    padding:25px;
+    font-size: 25px;
+}
+th:first-child {
+    border-top-left-radius:15px;
+}
+   
+th:last-child {
+    border-top-right-radius:15px;
+}
+tr {
+    color:var(--fg);
+}
+tr:last-child td:first-child {
+    border-bottom-left-radius:15px;
+}
+tr:last-child td:last-child {
+    border-bottom-right-radius:15px;
+}
+td {
+    background:var(--bg);
+    padding:25px;
+}
+td:last-child {
+    border-right: 0px;
 }

@@ -1,11 +1,11 @@
 from django.db import models
 import uuid
+import json
 
 class CTF(models.Model):
     name = "Global Variables (Constants)"
     registrations = models.BooleanField(default=True)
-    wave1 = models.BooleanField(default=False)
-    wave2 = models.BooleanField(default=False)
+    started = models.BooleanField(default=False)
     ended  = models.BooleanField(default=False)
     def total_users(self):
         result = User.objects.all().count()
@@ -16,8 +16,17 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     score = models.IntegerField(default=0)
     disqualified = models.BooleanField(default=False)
+    solved_challenges = models.CharField(max_length=255,blank=True,null=True,default=json.dumps([]))
+    def set_solved_challenge(self, cid):
+        svc = json.loads(self.solved_challenges)
+        svc.append(int(cid))
+        self.solved_challenges = json.dumps(svc)
+    def get_solved_challenges(self):
+        return json.loads(self.solved_challenges)
     def __str__(self):
         return f"{self.name}"
+    def members_count(self):
+        return len(User.objects.filter(team=self))
 
 class User(models.Model):
     uid = models.AutoField(primary_key=True,unique=True)

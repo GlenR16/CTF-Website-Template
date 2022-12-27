@@ -4,7 +4,14 @@ import re
 from .models import User,Team,Challenge,CTF
 from django.views.decorators.csrf import requires_csrf_token
 import os
-import mimetypes
+from django.urls import reverse
+
+if CTF.objects.first() == None:
+    print("Initialising CTF Object.")
+    new_ctf = CTF()
+    new_ctf.save()
+else:
+    print("CTF Object exists.")
 
 @requires_csrf_token
 def index(request):
@@ -18,13 +25,13 @@ def signup(request):
         email = request.POST.get("email", "")
         name = request.POST.get("name", "")
         password = request.POST.get("password", "")
-        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)) and CTF.objects.first().registration == True:
+        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)) and CTF.objects.first().registrations == True:
             new_user = User(email=email,name=name,password=password)
             new_user.save()
             request.session['email'] = new_user.email
             return redirect(dashboard)
         else:
-            return render(request,'signup.html',{'error':True})
+            return render(request,'signup.html',{'error':True,"CTF":CTF.objects.first()})
     else:
         if session!='':
             return redirect(dashboard)
@@ -52,21 +59,51 @@ def login(request):
 
 def dashboard(request):
     session = session_verification(request)
+    msg = request.GET.get("msg","")
     if session!='':
         user = User.objects.get(email=session)
         if user.team != None and user.team.disqualified == True:
             return render(request,'disqualified.html',{'user':user})
-        if CTF.objects.first().wave1 == True:
+        if CTF.objects.first().started == True:
             challenge = Challenge.objects.all()
-            if CTF.objects.first().wave2 == True:
-                    return render(request,"dashboard.html",{'user':user,'challenge':challenge,"CTF":CTF.objects.first()})
+            try:
+                team = Team.objects.get(tid=user.team.tid)
+            except:
+                team = ""
+            if msg=="Right":
+                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first(),"flag":True})
+            elif msg=="Wrong":
+                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first(),"flag":False})
             else:
-                return render(request,"dashboard.html",{'user':user,'challenge':challenge[:15],"CTF":CTF.objects.first()})
+                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first()})
         else:
             return render(request,"timer.html",{'user':user})
     else:
         return redirect(login)
     
+def flag(request):
+    session = session_verification(request)
+    if session!='':
+        user = User.objects.get(email=session)
+        if request.method == 'POST' and CTF.objects.first().ended != True and CTF.objects.first().started == True and user.team != None and user.team.disqualified != True:
+            flag = request.POST.get("flag","")
+            cid = request.POST.get("cid","")
+            try:
+                challenge = Challenge.objects.get(cid=cid)
+                team = Team.objects.get(tid=user.team.tid)
+            except:
+                return HttpResponseRedirect('dashboard')
+            if flag != "" and int(cid) not in team.get_solved_challenges() and challenge.flag == flag:
+                team.score += challenge.points
+                team.set_solved_challenge(cid)
+                team.save()
+                challenge.solved()
+                return HttpResponseRedirect('dashboard?msg=Right')
+            else:
+                return HttpResponseRedirect('dashboard?msg=Wrong')
+        else:
+            return HttpResponseRedirect('dashboard')
+
 def session_verification(request):
     try:
         session = request.session['email']
@@ -74,24 +111,6 @@ def session_verification(request):
         session = ''
     return session
 
-def flag(request):
-    session = session_verification(request)
-    if request.method=="POST" and session!='' and CTF.objects.first().ended != True and ( CTF.objects.first().wave1 == True or CTF.objects.first().wave2 == True):
-        flag = request.POST.get("flag","")
-        cid = request.POST.get("cid","")
-        try:
-            user = User.objects.get(email=session)
-            challenge = Challenge.objects.get(cid=cid)
-            team = Team.objects.get(tid=user.team.tid)
-        except:
-            return redirect(dashboard)
-        if flag != "" and challenge.flag == flag and user.team.disqualified != True:
-            team.score += challenge.points
-            team.save()
-            challenge.solved()
-        return redirect(dashboard)
-    else:
-        return redirect(dashboard)
 
 def profile(request):
     session = session_verification(request)
@@ -103,18 +122,16 @@ def profile(request):
             if name != "":
                 new_team = Team(name=name)
                 new_team.save()
-                tid = new_team.tid
-            else:
+                user.team = Team.objects.get(tid=new_team.tid)
+                user.save()
+            elif tid != "":
                 try:
                     new_team = Team.objects.get(tid=tid)
                 except:
                     return render(request,"profile.html",{'user':user,'error':True})
-            if len(User.objects.filter(team=new_team))<5:
-                try:
+                if new_team.members_count() < 5:
                     user.team = Team.objects.get(tid=tid)
                     user.save()
-                except:
-                    return render(request,"profile.html",{'user':user,'error':True})
             return render(request,"profile.html",{'user':user})
         else:
             user = User.objects.get(email=session)
@@ -123,6 +140,16 @@ def profile(request):
         return redirect(login)
 
 def downloads(request,filename):
-    url = os.path.join(os.path.dirname(os.path.dirname(__file__)),'downloads\\'+filename)
-    file = open(url,'rb')
-    return FileResponse(file)
+    if "../" in filename or "'" in filename or '"' in filename:
+        return Http404
+    try:
+        file = open('ctf\\downloads\\'+filename,'rb')
+        return FileResponse(file)
+    except:
+        return Http404
+
+def statistics(request):
+    challenge = Challenge.objects.all()
+    team = Team.objects.all().order_by('-score')
+    ctf = CTF.objects.first()
+    return render(request, "statistics.html",{"challenge":challenge,"team":team,"ctf":ctf})

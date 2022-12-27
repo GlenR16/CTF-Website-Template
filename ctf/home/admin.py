@@ -8,23 +8,23 @@ from .models import CTF
 class Challenge(admin.ModelAdmin):
     list_display = ("name", "solves")
     list_filter = ("category", )
-    fields = ("name","flag","category","description","hint","endpoint","points")
+    #fields = ("name","flag","category","description","hint","endpoint","points")
 
 @admin.register(Team)
 class Team(admin.ModelAdmin):
     list_display = ("name", "score")
     list_filter = ("disqualified", )
     search_fields = ("tid__startswith", )
-    fields=("name","disqualified")
+    #fields=("name","disqualified")
 
 @admin.register(User)
 class User(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("email__startswith", )
-    fields = ("name","email","team")
+    #fields = ("name","email","team")
 
 @admin.register(CTF)
 class CTF(admin.ModelAdmin):
-    list_display = ("name","registrations", "wave1", "wave2", "ended","total_users")
+    list_display = ("name","registrations", "started", "ended","total_users")
     
 

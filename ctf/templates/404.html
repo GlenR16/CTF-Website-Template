@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
     <title>VoidCTF</title>
 </head>
 <body>
@@ -21,7 +22,8 @@
         <div class="heading">404 Not Found</div>
         <div class="content">
             It seems you are lost. <br>
-            If an attack on the website is detected your team and IP will be banned.
+            If an attack on the website is detected your team and IP will be banned.<br><br>
+            <i class="fa-solid fa-triangle-exclamation fa-4x"></i>
             <span style="display: none;">
                 {% random_string %}
             </span>

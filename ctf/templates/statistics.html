@@ -1,0 +1,60 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    <title>Profile</title>
+</head>
+<body>
+    <div class="nav">
+        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
+        <div class="btns">
+            <a href="dashboard">Dashboard</a>
+            <a href="profile">Profile</a>
+            <a href="..">Home</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="heading">Challenges</div>
+        <div class="content">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Solves</th>
+                    <th>Current Points</th>
+                  </tr>
+                  {% for item in challenge %}
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>{{item.solves}}</td>
+                    <td>{{item.points}}</td>
+                </tr>
+                  {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="main">
+        <div class="heading">Teams</div>
+        <div class="content">
+            <table>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Team Score</th>
+                    <th>Team Members</th>
+                  </tr>
+                  {% for item in team %}
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>{{item.score}}</td>
+                    <td>{{item.members_count}}</td>
+                </tr>
+                  {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>
