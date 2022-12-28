@@ -8,10 +8,11 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="{%static '/main.js' %}"></script>
     <title>Dashboard</title>
 </head>
 <body>
-    <div class="nav">
+    <div class="nav" id="nav">
         <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
         <div class="btns">
             <a href="profile">Profile</a>
@@ -20,6 +21,9 @@
                 {% csrf_token %}
                 <input type="submit" value="Logout">
             </form>
+            <a href="javascript:void(0);" class="icon" onclick="navResponsive()">
+                <i class="fa fa-bars"></i>
+            </a>
         </div>
     </div>
     <div class="main">
@@ -55,7 +59,7 @@
         <div class="heading">{{item.name}} [{{item.points}}]</div>
         <div class="row">
             <div class="content side">
-                {{item.category}}<br>
+                <i>{{item.category}}</i><br>
                 {{item.description}}<br>
                 {% if item.hint != None %}
                 <b>{{item.hint}}</b><br>

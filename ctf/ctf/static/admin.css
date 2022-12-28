@@ -24,21 +24,47 @@ body.theme-cyborg .selector-chosen > *{
     background-color: #343a40;
     color: white;
 }
+
+/* Out side main page only */
+
 body {
-    background-color: #292829;
+    background-color: #2a3f50;
 }
 body > .login-box > .card{
     border: 3px solid white;
+    border-radius: 15px;
     outline: none;
     box-shadow: none;
+    background-color: #2a3f50;
 }
-input[type="text"]{
-    background-color: #343a40;
+body > .login-box > .card > .card-body > .login-box-msg{
+    color: white;
+}
+.input-group-text{
+    border: 3px solid white;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+input[type="text"],input[type="password"]{
+    background-color: #2a3f50;
     color: white;
     border: 3px solid white;
-    border-radius: 5px;
+    border-radius: 15px;
     height: 40px;
     padding: 5px;
     box-shadow: none;
     outline: none ;
+}
+input[type="text"]:focus,input[type="password"]:focus{
+    background-color: #2a3f50;
+    color: white;
+    border: 3px solid white;
+    border-radius: 15px;
+    height: 40px;
+    padding: 5px;
+    box-shadow: none;
+    outline: none ;
+}
+h1 > picture > img{
+    width: 200px;
 }

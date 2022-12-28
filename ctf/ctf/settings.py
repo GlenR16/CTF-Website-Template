@@ -165,6 +165,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "VoidCTF Admin",
     "custom_css": "/admin.css",
     "topmenu_links": [
-        {"name": "Website",  "url": "index"},
+        {"name": "CTF User Page",  "url": "index"},
     ],
 }

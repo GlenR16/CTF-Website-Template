@@ -32,6 +32,7 @@ body{
     align-items: center;
     justify-content: center;
 }
+/* Global Navbar */
 .nav{
     display: inline-flex;
     flex-direction: row;
@@ -67,6 +68,7 @@ body{
     color: var(--bg);
     background-color: var(--fg);
 }
+/* Containers */
 .main{
     display: flex;
     flex-direction: column;
@@ -78,6 +80,7 @@ body{
     border-radius: 15px;
     padding: 0px;
 }
+/* Sub Containers */
 .heading{
     font-size: 35px !important;
     font-weight: 600;
@@ -104,6 +107,7 @@ body{
 .side{
     width: 45vw;
 }
+/* Input Fields */
 input[type="submit"]{
     background-color: transparent;
     color: var(--fg);
@@ -111,7 +115,7 @@ input[type="submit"]{
     border-radius: 15px;
     font-size: 25px;
     padding: 10px;
-    margin: 10px;
+    margin: 10px 0px 10px 10px;
 }
 input[type="submit"]:hover{
     background-color: var(--fg);
@@ -125,19 +129,25 @@ input[type="password"],input[type="email"],input[type="text"]{
     font-size: 25px;
     padding: 10px;
     margin: 10px;
-    width: 75%;
+    width: 80%;
 }
 input[type="password"]:focus,input[type="email"]:focus,input[type="text"]:focus{
     outline: none !important;
 }
+/* All Fontawesome icons */
 i{
     color: var(--fg);
 }
+a:has(> i):hover > i{
+    color: var(--bg);
+}
+/* All Error Messages */
 .error{
     color: var(--error);
     font-size: 25px;
     border-color: var(--error);
 }
+/* Global Tables */
 table{
     width: 100%;
 }
@@ -171,6 +181,44 @@ td {
 td:last-child {
     border-right: 0px;
 }
-canvas{
-    height: 35vh;
+/* Responsive Navbar */
+.nav .icon {
+    display: none;
+}
+@media screen and (max-width: 600px) {
+    .nav .btns *:not(:last-child) {
+        display: none;
+    }
+    .nav a.icon {
+        display: block;
+    }
+    .row{
+        flex-direction: column;
+    }
+    .extras{
+        flex-direction: column !important;
+    }
+    input[type="password"],input[type="email"],input[type="text"]{
+        width: 90%;
+        margin: 10px 0px;
+    }
+    .side{
+        width: 90%;
+    }
+}
+@media screen and (max-width: 600px) {
+    .nav.responsive {
+        flex-direction: column;
+        align-items:stretch;  
+    }
+    .nav.responsive .btns {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .nav.responsive .btns *{
+        display: block;
+    }
+    .nav.responsive .btns a{
+        margin: 10px 0px;
+    }
 }

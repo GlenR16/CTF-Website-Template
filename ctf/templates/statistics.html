@@ -7,22 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
-    <script src="{% static '/main.js' %}"></script>
     <link rel="stylesheet" href="{%static '/main.css' %}">
+    <script src="{%static '/main.js' %}"></script>
     <title>Profile</title>
 </head>
 <body>
-    <div class="nav">
+    <div class="nav" id="nav">
         <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
         <div class="btns">
             <a href="dashboard">Dashboard</a>
             <a href="profile">Profile</a>
             <a href="..">Home</a>
+            <a href="javascript:void(0);" class="icon" onclick="navResponsive()">
+                <i class="fa fa-bars"></i>
+            </a>
         </div>
     </div>
     <div class="main">
         <div class="heading">Challenges</div>
-        <div class="content">
+        <div class="content" style="overflow-x:auto;">
             <table>
                 <tr>
                     <th>Name</th>
@@ -43,23 +46,25 @@
     <div class="main">
         <div class="heading">Teams</div>
         <div class="content">
-            <i class="fa-solid fa-magnifying-glass"></i><input type="text" id="table_search" onkeyup="tableSearch()" placeholder="Team Name"> <br> <br>
-            <table id="team_table">
-                <tr>
-                    <th>Team Rank</th>
-                    <th>Team Name</th>
-                    <th>Team Score</th>
-                    <th>Team Members</th>
-                  </tr>
-                  {% for item in team %}
-                <tr>
-                    <td>{{forloop.counter}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.score}}</td>
-                    <td>{{item.members_count}}</td>
-                </tr>
-                  {% endfor %}
-            </table>
+            <i class="fa-solid fa-magnifying-glass"></i><input type="text" id="table_search" onkeyup="tableSearch()" placeholder="Team Name" style="width: 90% !important;"> <br> <br>
+            <div class="content" style="overflow-x:auto;">
+                <table id="team_table">
+                    <tr>
+                        <th>Team Rank</th>
+                        <th>Team Name</th>
+                        <th>Team Score</th>
+                        <th>Team Members</th>
+                      </tr>
+                      {% for item in team %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.score}}</td>
+                        <td>{{item.members_count}}</td>
+                    </tr>
+                      {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 </body>
