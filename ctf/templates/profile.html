@@ -27,6 +27,7 @@
             <p class="error">Incorrect Team Information.</p>
         </div>
         {% endif %}
+        <div class="heading">Team</div>
         <div class="row">
             <div class="content side">
                 <div class="heading"> Create Team</div>
@@ -48,6 +49,7 @@
     </div>
     {% else %}
     <div class="main">
+        <div class="heading">Profile</div>
         <div class="row">
             <div class="content side">
                 User Name: {{user.name}} <br>
@@ -56,11 +58,30 @@
                 Team Score: {{user.team.score}} <br>
             </div>
             <div class="content side">
-                
+                Total Users: {{CTF.total_users}}<br>
+                Total Teams: {{CTF.total_teams}}<br>
+                Total Challenges: {{CTF.total_challenges}}<br>
+                Total Solves: {{CTF.total_solves}}<br>
             </div>
         </div>
     </div>
-    
     {% endif %}
+    <div class="main">
+        <div class="heading">Rules</div>
+        <div class="content" style="text-align: left;">
+            <ul>
+                <li>Any attack on VoidCTF websites, servers or applications will result in immediate disqualification.</li>
+                <li>Sharing of challenge flags will result in immediate disqualification.</li>
+                <li>Teams will less than 2 members will not be eligible to recieve prizes.</li>
+                <li>Certificates & Prizes will be issued in the name provided while registration.</li>
+                <li>Information provided by the players should be accurate.</li>
+                <li>Players should be respectful towards other players, moderators and organizers.</li>
+                <li>Organizers reserve the right to disqualify any team and its members.</li>
+                <li>Players cannot leave the teams they join once.</li>
+                <li>All communications will proceed through email and discord server.</li>
+                <li>The challenge will last a total of 24 hours.</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

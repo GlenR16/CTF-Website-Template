@@ -132,10 +132,10 @@ def profile(request):
                 if new_team.members_count() < 5:
                     user.team = Team.objects.get(tid=tid)
                     user.save()
-            return render(request,"profile.html",{'user':user})
+            return render(request,"profile.html",{'user':user,'CTF':CTF.objects.first()})
         else:
             user = User.objects.get(email=session)
-            return render(request,"profile.html",{'user':user})
+            return render(request,"profile.html",{'user':user,'CTF':CTF.objects.first()})
     else:
         return redirect(login)
 

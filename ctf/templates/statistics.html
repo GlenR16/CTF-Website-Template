@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+    <script src="{% static '/main.js' %}"></script>
     <link rel="stylesheet" href="{%static '/main.css' %}">
     <title>Profile</title>
 </head>
@@ -29,6 +31,7 @@
                   </tr>
                   {% for item in challenge %}
                 <tr>
+                    
                     <td>{{item.name}}</td>
                     <td>{{item.solves}}</td>
                     <td>{{item.points}}</td>
@@ -40,14 +43,17 @@
     <div class="main">
         <div class="heading">Teams</div>
         <div class="content">
-            <table>
+            <i class="fa-solid fa-magnifying-glass"></i><input type="text" id="table_search" onkeyup="tableSearch()" placeholder="Team Name"> <br> <br>
+            <table id="team_table">
                 <tr>
+                    <th>Team Rank</th>
                     <th>Team Name</th>
                     <th>Team Score</th>
                     <th>Team Members</th>
                   </tr>
                   {% for item in team %}
                 <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.score}}</td>
                     <td>{{item.members_count}}</td>

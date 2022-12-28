@@ -1,4 +1,5 @@
 {%load static%}
+{% load template_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +28,9 @@
             </form>
             {% if error %}
                 <p class="error">Incorrect Details. <br> Too many wrong attempts may get your IP blocked.</p>
+                <span style="display: none;">
+                    {% random_string %}
+                </span>
             {% endif %}
         </div>
     </div>

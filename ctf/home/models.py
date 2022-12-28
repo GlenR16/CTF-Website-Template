@@ -8,8 +8,16 @@ class CTF(models.Model):
     started = models.BooleanField(default=False)
     ended  = models.BooleanField(default=False)
     def total_users(self):
-        result = User.objects.all().count()
-        return result
+        return User.objects.all().count()
+    def total_teams(self):
+        return Team.objects.all().count()
+    def total_challenges(self):
+        return Challenge.objects.all().count()
+    def total_solves(self):
+        total = 0
+        for i in Challenge.objects.all():
+            total += i.solves
+        return total
     
 class Team(models.Model):
     tid = models.CharField(default=uuid.uuid4().hex[:8],primary_key=True,unique=True,max_length=8)
@@ -27,6 +35,7 @@ class Team(models.Model):
         return f"{self.name}"
     def members_count(self):
         return len(User.objects.filter(team=self))
+    
 
 class User(models.Model):
     uid = models.AutoField(primary_key=True,unique=True)
@@ -44,7 +53,7 @@ class Challenge(models.Model):
     category = models.CharField(max_length=50)
     description = models.CharField(max_length=511)
     hint = models.CharField(max_length=127,blank=True,null=True)
-    endpoint = models.CharField(max_length=63)
+    endpoint = models.CharField(max_length=63,blank=True,null=True)
     points = models.IntegerField()
     solves = models.IntegerField(default=0)
     def __str__(self):

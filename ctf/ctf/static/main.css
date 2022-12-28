@@ -136,6 +136,7 @@ i{
 .error{
     color: var(--error);
     font-size: 25px;
+    border-color: var(--error);
 }
 table{
     width: 100%;
@@ -169,4 +170,7 @@ td {
 }
 td:last-child {
     border-right: 0px;
+}
+canvas{
+    height: 35vh;
 }

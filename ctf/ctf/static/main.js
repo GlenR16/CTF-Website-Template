@@ -1,4 +1,5 @@
-if (document.getElementById("timer") != "")
+const timer = document.getElementById("timer")
+if (timer)
 {
   var countDownDate = new Date("Jan 5, 2023 15:37:25").getTime();
   var timerSetter = setInterval(function() {
@@ -15,7 +16,6 @@ if (document.getElementById("timer") != "")
     }
   }, 1000);
 }
-
 function verifyPassword(password) {  
   if (password.length < 8)
   {  
@@ -27,3 +27,21 @@ function verifyPassword(password) {
   }
 }
 
+function tableSearch() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("table_search");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("team_table");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}

@@ -30,20 +30,20 @@
     </div>
     {% if CTF.ended == True %}
     <div class="main">
-        <div class="row heading">
-            The CTF has ended. <br> You can still solve the challenges however the system will not accept the flags.
+        <div class="heading">
+            The CTF has ended. <br> You can still solve the challenges however the system will not accept any flags.
         </div>
     </div>
     {% endif %}
     {% if flag == True %}
     <div class="main">
-        <div class="row heading">
+        <div class="heading">
             Correct Flag
         </div>
     </div>
     {% elif flag == False %}
     <div class="main">
-        <div class="row heading error" style="font-size: 35px;">
+        <div class="heading error" style="font-size: 35px;">
             Wrong Flag
         </div>
     </div>
@@ -80,7 +80,7 @@
     <div class="main">
         <div class="heading">{{item.name}}</div>
         <div class="content">
-            <i class="fa-solid fa-circle-check fa-4x"></i>
+            <i class="fa-solid fa-square-check fa-4x"></i>
         </div>
     </div>
     {% endif %}
@@ -93,10 +93,6 @@
         </p></div>
     </div>
     {% endif %}
-    <div class="main">
-        <div class="content">
-            Total Players: {{CTF.total_users}}
-        </div>
-    </div>
+    <br>
 </body>
 </html>
