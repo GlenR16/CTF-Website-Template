@@ -1,8 +1,14 @@
 from django.contrib import admin
-from .models import Team
-from .models import User
-from .models import Challenge
-from .models import CTF
+from .models import Team,User,Challenge,CTF
+from django.contrib.sessions.models import Session
+
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    def email(self,obj):
+        return obj.get_decoded().get("email", "Not logged in.")
+    email.short_description = "Email"
+    list_display = ("session_key","email")
+    search_fields = ("session_key_startswith",)
 
 @admin.register(Challenge)
 class Challenge(admin.ModelAdmin):

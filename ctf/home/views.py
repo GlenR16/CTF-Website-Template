@@ -1,12 +1,12 @@
+import datetime
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,HttpResponseRedirect,Http404,FileResponse
+from django.http import HttpResponseRedirect,Http404,FileResponse
 import re
 from .models import User,Team,Challenge,CTF
 from django.views.decorators.csrf import requires_csrf_token
 import uuid
-from django.urls import reverse
-
-#import pickle
+import logging
+logger = logging.getLogger(__name__)
 
 if CTF.objects.first() == None:
     print("Initialising CTF Object.")
@@ -52,6 +52,7 @@ def login(request):
                 return redirect(dashboard)
         except:
             pass
+        logger.warning('Failed Login ['+str(datetime.datetime.now())+"] " + email +" IP "+get_client_ip(request))
         return render(request,'login.html',{'error':True})
     else:
         if session!='':
@@ -82,7 +83,8 @@ def dashboard(request):
             return render(request,"timer.html",{'user':user})
     else:
         return redirect(login)
-    
+
+ 
 def flag(request):
     session = session_verification(request)
     if session!='' and request.method == 'POST':
@@ -143,6 +145,7 @@ def profile(request):
     else:
         return redirect(login)
 
+
 def downloads(request,filename):
     if "../" in filename or "'" in filename or '"' in filename:
         raise Http404
@@ -156,3 +159,11 @@ def statistics(request):
     challenge = Challenge.objects.all()
     team = Team.objects.all().order_by('-score')
     return render(request, "statistics.html",{"challenge":challenge,"team":team})
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
