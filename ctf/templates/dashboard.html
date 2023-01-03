@@ -65,7 +65,7 @@
                 <b>{{item.hint}}</b><br>
                 {% endif %}
                 {% if item.endpoint != "" %}
-                <a href="{{item.endpoint}}" download>URL/URI</a>
+                <a href="{{item.endpoint}}" {% if "#" not in item.endpoint %}download{% else %} target=_blank {% endif %}>URL/URI</a>
                 {% endif %}
                 <br>
             </div>

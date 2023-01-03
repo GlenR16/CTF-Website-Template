@@ -20,8 +20,10 @@
 body{
     background: rgb(46,0,14);
     background: linear-gradient(45deg, rgba(46,0,14,1) 0%, rgba(0,61,124,1) 50%, rgba(77,0,101,1) 100%);
+
     background-repeat: no-repeat;
     background-attachment: fixed;
+    
     margin:0px;
     padding:0px;
     overflow-x: hidden;

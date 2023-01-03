@@ -1,4 +1,4 @@
-const timer = document.getElementById("timer")
+const timer = document.getElementById("timer");
 if (timer)
 {
   var countDownDate = new Date("Jan 5, 2023 15:37:25").getTime();
@@ -8,11 +8,11 @@ if (timer)
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("timer").innerHTML = "Event Begins in "+ days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    timer.innerHTML = "Event Begins in "+ days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
     if (distance < 0) 
     {
       clearInterval(x);
-      document.getElementById("timer").innerHTML = "CTF has begun. <br> Please Reload the website.";
+      timer.innerHTML = "CTF has begun. <br> Please Reload the website.";
     }
   }, 1000);
 }

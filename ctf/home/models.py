@@ -1,5 +1,4 @@
 from django.db import models
-import uuid
 import json
 
 class CTF(models.Model):
@@ -20,7 +19,7 @@ class CTF(models.Model):
         return total
     
 class Team(models.Model):
-    tid = models.CharField(default=uuid.uuid4().hex[:8],primary_key=True,unique=True,max_length=8)
+    tid = models.CharField(primary_key=True,max_length=8)
     name = models.CharField(max_length=50)
     score = models.IntegerField(default=0)
     disqualified = models.BooleanField(default=False)

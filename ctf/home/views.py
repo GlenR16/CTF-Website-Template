@@ -3,8 +3,10 @@ from django.http import HttpResponse,HttpResponseRedirect,Http404,FileResponse
 import re
 from .models import User,Team,Challenge,CTF
 from django.views.decorators.csrf import requires_csrf_token
-import os
+import uuid
 from django.urls import reverse
+
+#import pickle
 
 if CTF.objects.first() == None:
     print("Initialising CTF Object.")
@@ -83,16 +85,16 @@ def dashboard(request):
     
 def flag(request):
     session = session_verification(request)
-    if session!='':
+    if session!='' and request.method == 'POST':
         user = User.objects.get(email=session)
-        if request.method == 'POST' and CTF.objects.first().ended != True and CTF.objects.first().started == True and user.team != None and user.team.disqualified != True:
+        if  CTF.objects.first().ended != True and CTF.objects.first().started == True and user.team != None and user.team.disqualified != True:
             flag = request.POST.get("flag","")
             cid = request.POST.get("cid","")
             try:
                 challenge = Challenge.objects.get(cid=cid)
                 team = Team.objects.get(tid=user.team.tid)
             except:
-                return HttpResponseRedirect('dashboard')
+                raise Http404
             if flag != "" and int(cid) not in team.get_solved_challenges() and challenge.flag == flag:
                 team.score += challenge.points
                 team.set_solved_challenge(cid)
@@ -103,6 +105,8 @@ def flag(request):
                 return HttpResponseRedirect('dashboard?msg=Wrong')
         else:
             return HttpResponseRedirect('dashboard')
+    else:
+        raise Http404
 
 def session_verification(request):
     try:
@@ -120,7 +124,7 @@ def profile(request):
             tid = request.POST.get("tid", "")
             name = request.POST.get("name", "")
             if name != "":
-                new_team = Team(name=name)
+                new_team = Team(tid=uuid.uuid4().hex[:8],name=name)
                 new_team.save()
                 user.team = Team.objects.get(tid=new_team.tid)
                 user.save()
@@ -132,7 +136,7 @@ def profile(request):
                 if new_team.members_count() < 5:
                     user.team = Team.objects.get(tid=tid)
                     user.save()
-            return render(request,"profile.html",{'user':user,'CTF':CTF.objects.first()})
+            return HttpResponseRedirect('profile')
         else:
             user = User.objects.get(email=session)
             return render(request,"profile.html",{'user':user,'CTF':CTF.objects.first()})
@@ -141,15 +145,14 @@ def profile(request):
 
 def downloads(request,filename):
     if "../" in filename or "'" in filename or '"' in filename:
-        return Http404
+        raise Http404
     try:
         file = open('ctf\\downloads\\'+filename,'rb')
         return FileResponse(file)
     except:
-        return Http404
+        raise Http404
 
 def statistics(request):
     challenge = Challenge.objects.all()
     team = Team.objects.all().order_by('-score')
-    ctf = CTF.objects.first()
-    return render(request, "statistics.html",{"challenge":challenge,"team":team,"ctf":ctf})
+    return render(request, "statistics.html",{"challenge":challenge,"team":team})
