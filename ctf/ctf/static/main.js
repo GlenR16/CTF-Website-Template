@@ -1,7 +1,7 @@
 const timer = document.getElementById("timer");
 if (timer)
 {
-  var countDownDate = new Date("Jan 5, 2023 15:37:25").getTime();
+  var countDownDate = new Date("Mar 5, 2023 15:37:25").getTime();
   var timerSetter = setInterval(function() {
     var distance = countDownDate - new Date().getTime();
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -53,4 +53,28 @@ function navResponsive() {
   } else {
     x.className = "nav";
   }
+}
+
+if ($('[name="flag_submission"]')) {
+  $('[name="flag_submission"]').on( "submit", function(e) {
+    e.preventDefault();
+    var flag = $(this).serialize();
+    var cid = $(this).serializeArray()[2]["value"];
+    var name = $("."+cid+"> .heading").html().split(" ")[0];
+    $.ajax({
+      type: "POST",
+      url: "/flag",
+      data: flag,
+      success: function (json) {
+        if(json["correct"] == 1){
+          $("."+cid).html("<div class='heading'>"+name+"</div><div class='content'><i class='fa-solid fa-square-check fa-4x'></i></div>");
+          $("#team_score").html("<i class='fa-solid fa-rotate-right'></i>")
+        }
+        else{
+          $("#error"+cid).text("Incorrect Flag");
+        }
+        $("form:has(#error"+cid+")")[0].reset();
+      }
+    });
+  });
 }

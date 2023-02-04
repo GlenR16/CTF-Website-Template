@@ -1,12 +1,12 @@
-import datetime
-from django.shortcuts import render,redirect
-from django.http import HttpResponseRedirect,Http404,FileResponse
-import re
+from django.contrib.auth import login,logout,authenticate,update_session_auth_hash
+from django.views.generic.base import TemplateView,View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render,redirect,get_object_or_404
+from django.http import HttpResponseRedirect,Http404,FileResponse,JsonResponse
+from .forms import UserCreationForm,UserLoginForm,PasswordChangeForm
 from .models import User,Team,Challenge,CTF
 from django.views.decorators.csrf import requires_csrf_token
 import uuid
-import logging
-logger = logging.getLogger(__name__)
 
 if CTF.objects.first() == None:
     print("Initialising CTF Object.")
@@ -15,155 +15,154 @@ if CTF.objects.first() == None:
 else:
     print("CTF Object exists.")
 
-@requires_csrf_token
-def index(request):
-    if request.method == 'POST':
-        request.session.flush()
-    return render(request,'index.html')
+class IndexView(TemplateView):
+    template_name = "index.html"
 
-def signup(request):
-    session = session_verification(request)
-    if request.method == 'POST' and session == "":
-        email = request.POST.get("email", "")
-        name = request.POST.get("name", "")
-        password = request.POST.get("password", "")
-        if (email!='' and name!='' and password!='' and re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email) and not User.objects.filter(email=email)) and CTF.objects.first().registrations == True:
-            new_user = User(email=email,name=name,password=password)
-            new_user.save()
-            request.session['email'] = new_user.email
-            return redirect(dashboard)
+class PasswordChangeView(LoginRequiredMixin,TemplateView):
+    template_name = "password_change.html"
+    def post(self, request, *args, **kwargs):
+        form = PasswordChangeForm(user=request.user,data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request,user)
+            return render(request,"password_changed.html")
         else:
-            return render(request,'signup.html',{'error':True,"CTF":CTF.objects.first()})
-    else:
-        if session!='':
-            return redirect(dashboard)
-        else:
-            return render(request,'signup.html',{"CTF":CTF.objects.first()})
+            return self.render_to_response({"form":form})
 
-def login(request):
-    session = session_verification(request)
-    if request.method == 'POST' and session == "":
-        email = request.POST.get("email", "")
-        password = request.POST.get("password", "")
-        try:
-            user = User.objects.get(email=email)
-            if (user!='' and password==user.password):
-                request.session['email'] = user.email
-                return redirect(dashboard)
-        except:
-            pass
-        logger.warning('Failed Login ['+str(datetime.datetime.now())+"] " + email +" IP "+get_client_ip(request))
-        return render(request,'login.html',{'error':True})
-    else:
-        if session!='':
-            return redirect(dashboard)
-        else:
-            return render(request,'login.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = PasswordChangeForm(self.request.user)
+        return context
 
-def dashboard(request):
-    session = session_verification(request)
-    msg = request.GET.get("msg","")
-    if session!='':
-        user = User.objects.get(email=session)
-        if user.team != None and user.team.disqualified == True:
-            return render(request,'disqualified.html',{'user':user})
+class SignupView(TemplateView):
+    template_name = "signup.html"
+    def post(self, request, *args, **kwargs):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request,user)
+            return redirect("/dashboard")
+        else:
+            return self.render_to_response({"form":form})
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect("/dashboard")
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = UserCreationForm()
+        context["CTF"] = CTF.objects.first()
+        return context
+
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("/login")
+
+class LoginView(TemplateView):
+    template_name = "login.html"
+    def post(self, request, *args, **kwargs):
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = authenticate(request,email=request.POST.get("username",""),password=request.POST.get("password",""))
+            login(request,user)
+            return redirect("/dashboard")
+        else:
+            return self.render_to_response({"form":form})
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect("/dashboard")
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = UserLoginForm()
+        return context
+
+class DashboardView(LoginRequiredMixin,TemplateView):
+    template_name = "dashboard.html"
+    login_url = '/login'
+    redirect_field_name = 'redirect_to'
+
+    def get(self, request, *args, **kwargs):
         if CTF.objects.first().started == True:
-            challenge = Challenge.objects.all()
-            try:
-                team = Team.objects.get(tid=user.team.tid)
-            except:
-                team = ""
-            if msg=="Right":
-                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first(),"flag":True})
-            elif msg=="Wrong":
-                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first(),"flag":False})
-            else:
-                return render(request,"dashboard.html",{'user':user,"team":team,'challenge':challenge,"CTF":CTF.objects.first()})
+            return super().get(request, *args, **kwargs)
+        elif request.user.team.disqualified:
+            return render(request,"disqualified.html")
         else:
-            return render(request,"timer.html",{'user':user})
-    else:
-        return redirect(login)
+            return render(request,"timer.html")
 
- 
-def flag(request):
-    session = session_verification(request)
-    if session!='' and request.method == 'POST':
-        user = User.objects.get(email=session)
-        if  CTF.objects.first().ended != True and CTF.objects.first().started == True and user.team != None and user.team.disqualified != True:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["team"] = Team.objects.get(tid=self.request.user.team.tid)
+        context["challenge"] = Challenge.objects.all()
+        context["CTF"] = CTF.objects.first()
+        return context
+
+class FlagView(LoginRequiredMixin,View):
+    def post(self, request, *args, **kwargs):
+        if CTF.objects.first().ended != True and CTF.objects.first().started == True and request.user.team != None and request.user.team.disqualified != True:
             flag = request.POST.get("flag","")
             cid = request.POST.get("cid","")
-            try:
-                challenge = Challenge.objects.get(cid=cid)
-                team = Team.objects.get(tid=user.team.tid)
-            except:
-                raise Http404
-            if flag != "" and int(cid) not in team.get_solved_challenges() and challenge.flag == flag:
+            challenge = get_object_or_404(Challenge,cid=cid)
+            team = get_object_or_404(Team,tid=request.user.team.tid)
+            if flag != "" and challenge not in team.solved_challenges.all() and challenge.flag == flag:
                 team.score += challenge.points
-                team.set_solved_challenge(cid)
+                team.solved_challenges.add(challenge)
                 team.save()
                 challenge.solved()
-                return HttpResponseRedirect('dashboard?msg=Right')
+                return JsonResponse({'correct': 1})
             else:
-                return HttpResponseRedirect('dashboard?msg=Wrong')
+                return JsonResponse({'correct': 0})
         else:
-            return HttpResponseRedirect('dashboard')
-    else:
-        raise Http404
+            raise Http404
 
-def session_verification(request):
-    try:
-        session = request.session['email']
-    except:
-        session = ''
-    return session
+class ProfileView(LoginRequiredMixin,TemplateView):
+    template_name = "profile.html"
 
-
-def profile(request):
-    session = session_verification(request)
-    if session!='':
-        user = User.objects.get(email=session)
-        if request.method=='POST' and user.team == None:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["CTF"] = CTF.objects.first()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        if request.user.team == None:
             tid = request.POST.get("tid", "")
             name = request.POST.get("name", "")
             if name != "":
                 new_team = Team(tid=uuid.uuid4().hex[:8],name=name)
                 new_team.save()
-                user.team = Team.objects.get(tid=new_team.tid)
-                user.save()
+                request.user.team = Team.objects.get(tid=new_team.tid)
+                request.user.save()
             elif tid != "":
                 try:
                     new_team = Team.objects.get(tid=tid)
                 except:
-                    return render(request,"profile.html",{'user':user,'error':True})
+                    return render(request,"profile.html",{'error':True})
                 if new_team.members_count() < 5:
-                    user.team = Team.objects.get(tid=tid)
-                    user.save()
+                    request.user.team = Team.objects.get(tid=tid)
+                    request.user.save()
             return HttpResponseRedirect('profile')
-        else:
-            user = User.objects.get(email=session)
-            return render(request,"profile.html",{'user':user,'CTF':CTF.objects.first()})
-    else:
-        return redirect(login)
 
+class DownloadView(View):
+    def get(self, request, *args, **kwargs):
+        if "../" in self.kwargs["filename"] or "'" in self.kwargs["filename"] or '"' in self.kwargs["filename"]:
+            raise Http404
+        try:
+            file = open('ctf\\downloads\\'+self.kwargs["filename"],'rb')
+            return FileResponse(file)
+        except:
+            raise Http404
 
-def downloads(request,filename):
-    if "../" in filename or "'" in filename or '"' in filename:
-        raise Http404
-    try:
-        file = open('ctf\\downloads\\'+filename,'rb')
-        return FileResponse(file)
-    except:
-        raise Http404
-
-def statistics(request):
-    challenge = Challenge.objects.all()
-    team = Team.objects.all().order_by('-score')
-    return render(request, "statistics.html",{"challenge":challenge,"team":team})
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+class StatisticsView(TemplateView):
+    template_name = "statistics.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["challenge"] = Challenge.objects.all()
+        context["team"] = Team.objects.all().order_by('-score')
+        return context

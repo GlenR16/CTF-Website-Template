@@ -1,12 +1,14 @@
 from django.contrib import admin
 from .models import Team,User,Challenge,CTF
+from .models import User as u
 from django.contrib.sessions.models import Session
+from django.shortcuts import get_object_or_404
 
 @admin.register(Session)
 class SessionAdmin(admin.ModelAdmin):
     def email(self,obj):
-        return obj.get_decoded().get("email", "Not logged in.")
-    email.short_description = "Email"
+        return get_object_or_404(u,id=obj.get_decoded().get("_auth_user_id","")).email
+    email.short_description = "User Email"
     list_display = ("session_key","email")
     search_fields = ("session_key_startswith",)
 
@@ -20,13 +22,11 @@ class Team(admin.ModelAdmin):
     list_display = ("name", "score")
     list_filter = ("disqualified", )
     search_fields = ("tid__startswith", )
-    fields=("tid","name","disqualified")
 
 @admin.register(User)
 class User(admin.ModelAdmin):
     list_display = ("name","email","team")
     search_fields = ("email__startswith", )
-    fields = ("name","email","team")
 
 @admin.register(CTF)
 class CTF(admin.ModelAdmin):

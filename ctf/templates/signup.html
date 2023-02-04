@@ -1,46 +1,29 @@
+{% extends 'base.html' %}
 {%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" href="{%static '/main.css' %}">
-    <script src="{%static '/main.js' %}"></script>
-    <title>VoidCTF Signup</title>
-</head>
-<body>
-    <div class="nav extras">
-        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
-        <div class="btns">
-            Already have an account? <a href="login">Login</a>
-        </div>
+{% block title %}
+VoidCTF Signup
+{% endblock title %}
+{% block content %}
+
+{% if CTF.registrations == True %}
+<div class="main">
+    <div class="heading">Create an Account</div>
+    <div class="content">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            By Registering you agree to our <a href="../#terms">Terms and Conditions</a> .<br>
+            <input type="submit" value="Register">
+        </form>
     </div>
-    {% if CTF.registrations == True %}
-    <div class="main">
-        <div class="heading">Create an Account</div>
-        <div class="content">
-            <form action="" method="post">
-                {% csrf_token %}
-                <input type="text" name="name" required placeholder="Name" maxlength="50"> <br>
-                <input type="email" name="email" required placeholder="E-mail" maxlength="50"> <br>
-                <input type="password" name="password" id="password" required placeholder="Password" onchange="verifyPassword(this.value);" maxlength="50" minlength="8"> <br>
-                By Registering you agree to our <a href="../#terms">Terms and Conditions</a> .<br>
-                <input type="submit" value="Register">
-            </form>
-            {% if error %}
-                <p class="error">Account already exists with this E-mail.</p>
-            {% endif %}
-        </div>
+</div>
+{% else %}
+<div class="main">
+    <div class="heading">
+        Registrations have ended. <br>
+        Better luck next time. 
     </div>
-    {% else %}
-    <div class="main">
-        <div class="heading">
-            Registrations have ended. <br>
-            Better luck next time. 
-        </div>
-    </div>
-    {% endif %}
-</body>
-</html>
+</div>
+{% endif %}
+{% endblock content %}
+

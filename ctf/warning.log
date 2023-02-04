@@ -1,2 +1,64 @@
-Not Found: /warning.log
+Not Found: /password_change/
 Not Found: /favicon.ico
+Not Found: /password_change/
+Not Found: /password_change/
+Not Found: /password_change/
+Not Found: /favicon.ico
+Not Found: /password_change/
+Not Found: /password_change/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Internal Server Error: /flag
+Traceback (most recent call last):
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\utils\deprecation.py", line 138, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\middleware\clickjacking.py", line 27, in process_response
+    if response.get("X-Frame-Options") is not None:
+       ^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+Not Found: /favicon.ico
+Internal Server Error: /flag
+Traceback (most recent call last):
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\utils\deprecation.py", line 138, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\middleware\clickjacking.py", line 27, in process_response
+    if response.get("X-Frame-Options") is not None:
+       ^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+Not Found: /favicon.ico
+Internal Server Error: /flag
+Traceback (most recent call last):
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\utils\deprecation.py", line 138, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\middleware\clickjacking.py", line 27, in process_response
+    if response.get("X-Frame-Options") is not None:
+       ^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+Not Found: /favicon.ico
+Internal Server Error: /flag
+Traceback (most recent call last):
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\utils\deprecation.py", line 138, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Glen\Projects\CTF\env1\Lib\site-packages\django\middleware\clickjacking.py", line 27, in process_response
+    if response.get("X-Frame-Options") is not None:
+       ^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'

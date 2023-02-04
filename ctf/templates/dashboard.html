@@ -1,102 +1,73 @@
+{% extends 'base.html' %}
 {%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{%static '/main.css' %}">
-    <script src="{%static '/main.js' %}"></script>
-    <title>Dashboard</title>
-</head>
-<body>
-    <div class="nav" id="nav">
-        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
-        <div class="btns">
-            <a href="profile">Profile</a>
-            <a href="statistics">Leaderboards</a>
-            <form action="../" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Logout">
-            </form>
-            <a href="javascript:void(0);" class="icon" onclick="navResponsive()">
-                <i class="fa fa-bars"></i>
-            </a>
-        </div>
+{% block title %}
+VoidCTF Dashboard
+{% endblock title %}
+{% block css %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+{% endblock css %}
+{% block content %}
+<div class="main">
+    <div class="row content">
+        <label>Name: {{user.name}}</label>
+        <label id="team_score">Team Score: {{user.team.score}}</label>
     </div>
-    <div class="main">
-        <div class="row content">
-            <label>Name: {{user.name}}</label>
-            <label>Team Score: {{user.team.score}}</label>
-        </div>
+</div>
+{% if CTF.ended == True %}
+<div class="main">
+    <div class="heading">
+        The CTF has ended. <br> You can still solve the challenges however the system will not accept any flags.
     </div>
-    {% if CTF.ended == True %}
-    <div class="main">
-        <div class="heading">
-            The CTF has ended. <br> You can still solve the challenges however the system will not accept any flags.
-        </div>
-    </div>
-    {% endif %}
-    {% if flag == True %}
-    <div class="main">
-        <div class="heading">
-            Correct Flag
-        </div>
-    </div>
-    {% elif flag == False %}
-    <div class="main">
-        <div class="heading error" style="font-size: 35px;">
-            Wrong Flag
-        </div>
-    </div>
-    {% endif %}
-    {% if user.team != None %}
+</div>
+{% endif %}
+{% if user.team != None %}
     {% for item in challenge %}
-    {% if item.cid not in team.get_solved_challenges %}
-    <div class="main">
-        <div class="heading">{{item.name}} [{{item.points}}]</div>
-        <div class="row">
-            <div class="content side">
-                <i>{{item.category}}</i><br>
-                {{item.description}}<br>
-                {% if item.hint != None %}
-                <b>{{item.hint}}</b><br>
-                {% endif %}
-                {% if item.endpoint != "" %}
-                <a href="{{item.endpoint}}" {% if "#" not in item.endpoint %}download{% else %} target=_blank {% endif %}>URL/URI</a>
-                {% endif %}
-                <br>
+        {% if item not in team.solved_challenges.all %}
+            <div class="main {{item.cid}}">
+                <div class="heading">{{item.name}} [{{item.points}}]</div>
+                <div class="row">
+                    <div class="content side">
+                        <i>{{item.category}}</i><br>
+                        {{item.description}}<br>
+                        {% if item.hint != None %}
+                        <b>{{item.hint}}</b><br>
+                        {% endif %}
+                        {% if item.endpoint != "" %}
+                        <a href="{{item.endpoint}}" {% if "#" not in item.endpoint %}download{% else %} target=_blank {% endif %}>URL/URI</a>
+                        {% endif %}
+                        <br>
+                    </div>
+                    <div class="content side">
+                        <form action="flag" method="post" name="flag_submission">
+                            <div class="error" id="error{{item.cid}}"></div>
+                            {% csrf_token %}
+                            <input type="text" name="flag" placeholder="Flag">
+                            <input type="hidden" name="cid" value="{{item.cid}}" maxlength="63">
+                            <input type="submit" value="Check Flag"><br>
+                        </form>
+                        Solves: {{item.solves}} <br>
+                    </div>
+                </div>
             </div>
-            <div class="content side">
-                <form action="flag" method="post">
-                    {% csrf_token %}
-                    <input type="text" name="flag" placeholder="Flag">
-                    <input type="hidden" name="cid" value="{{item.cid}}" maxlength="63">
-                    <input type="submit" value="Check Flag"><br>
-                </form>
-                Solves: {{item.solves}} <br>
+        {% else %}
+            <div class="main">
+                <div class="heading">{{item.name}}</div>
+                <div class="content">
+                    <i class="fa-solid fa-square-check fa-4x"></i>
+                </div>
             </div>
-        </div>
-    </div>
-    {% else %}
-    <div class="main">
-        <div class="heading">{{item.name}}</div>
-        <div class="content">
-            <i class="fa-solid fa-square-check fa-4x"></i>
-        </div>
-    </div>
-    {% endif %}
+        {% endif %}
     {% endfor %}
-    {% else %}
-    <div class="main">
-        <div class="content"><p class="error">
-            Join a team to view challenges. <br>
-            Goto profile to create/join a team.
-        </p></div>
-    </div>
-    {% endif %}
-    <br>
-</body>
-</html>
+{% else %}
+<div class="main">
+    <div class="content"><p class="error">
+        Join a team to view challenges. <br>
+        Goto profile to create/join a team.
+    </p></div>
+</div>
+{% endif %}
+<br>
+{% endblock content %}
+{% block script %}
+<script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+{% endblock script %}

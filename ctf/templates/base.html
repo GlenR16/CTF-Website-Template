@@ -1,0 +1,49 @@
+{% load static %}
+{% load template_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{%static '/main.css' %}">
+    {% block css %}
+    {% endblock css %}
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="nav" id="nav">
+        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
+        <div class="btns">
+            {% if user.is_authenticated %}
+                <a href="/profile">Profile</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/statistics">Leaderboards</a>
+                <a href="/logout/">Logout</a>
+            {% elif "/login" in request.get_full_path %}
+                <div class="btns">
+                    Don't have an account? <a href="signup">Signup</a>
+                </div>
+            {% elif "/signup" in request.get_full_path %}
+                <div class="btns">
+                    Already have an account? <a href="login">Login</a>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Signup</a>
+            {% endif %}
+            <a href="javascript:void(0);" class="icon" onclick="navResponsive()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+    </div>
+{% block content %}
+
+{% endblock content %}
+</body>
+<script src="{%static '/main.js' %}"></script>
+{% block script %}
+
+{% endblock script %}
+</html>

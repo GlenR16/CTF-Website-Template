@@ -133,6 +133,9 @@ input[type="password"],input[type="email"],input[type="text"]{
     margin: 10px;
     width: 80%;
 }
+p{
+    margin: 0px;
+}
 input[type="password"]:focus,input[type="email"]:focus,input[type="text"]:focus{
     outline: none !important;
 }

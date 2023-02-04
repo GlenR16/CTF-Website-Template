@@ -1,92 +1,82 @@
+{% extends 'base.html' %}
 {%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{%static '/main.css' %}">
-    <script src="{%static '/main.js' %}"></script>
-    <title>Profile</title>
-</head>
-<body>
-    <div class="nav" id="nav">
-        <a href=".."><img src="{%static '/logo.png' %}" alt="VoidCTF"></a>
+{% block title %}
+VoidCTF Profile
+{% endblock title %}
+{% block content %}
+<div class="main">
+    <div class="heading">User Tools</div>
+    <div class="content">
         <div class="btns">
-            <a href="dashboard">Dashboard</a>
-            <form action="../" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Logout">
-            </form>
-            <a href="javascript:void(0);" class="icon" onclick="navResponsive()">
-                <i class="fa fa-bars"></i>
-            </a>
+            <a href="/password_change/">Change your Password</a>
         </div>
     </div>
-    {% if user.team == None %}
-    <div class="main">
-        {% if error %}
-        <div class="content">
-            <p class="error">Incorrect Team Information.</p>
-        </div>
-        {% endif %}
-        <div class="heading">Team</div>
-        <div class="row">
-            <div class="content side">
-                <div class="heading"> Create Team</div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <input type="text" name="name" placeholder="Team Name" maxlength="50"> <br>
-                    <input type="submit" value="Create">
-                </form>
-            </div>
-            <div class="content side">
-                <div class="heading">Join Team</div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <input type="text" name="tid" placeholder="Team ID" maxlength="8"> <br>
-                    <input type="submit" value="Join">
-                </form>
-            </div>
-        </div>
-    </div>
-    {% else %}
-    <div class="main">
-        <div class="heading">Profile</div>
-        <div class="row">
-            <div class="content side">
-                User Name: {{user.name}} <br>
-                Team Name: {{user.team.name}} <br>
-                Team ID: {{user.team.tid}} <br>
-                Team Score: {{user.team.score}} <br>
-            </div>
-            <div class="content side">
-                Total Users: {{CTF.total_users}}<br>
-                Total Teams: {{CTF.total_teams}}<br>
-                Total Challenges: {{CTF.total_challenges}}<br>
-                Total Solves: {{CTF.total_solves}}<br>
-            </div>
-        </div>
+</div>
+
+{% if user.team == None %}
+<div class="main">
+    {% if error %}
+    <div class="content">
+        <p class="error">Incorrect Team Information.</p>
     </div>
     {% endif %}
-    <div class="main">
-        <div class="heading">Rules</div>
-        <div class="content" style="text-align: left;">
-            <ul>
-                <li>Any attack on VoidCTF websites, servers or applications will result in immediate disqualification.</li>
-                <li>Sharing of challenge flags will result in immediate disqualification.</li>
-                <li>Teams will less than 2 members will not be eligible to recieve prizes.</li>
-                <li>Certificates & Prizes will be issued in the name provided while registration.</li>
-                <li>Information provided by the players should be accurate.</li>
-                <li>Players should be respectful towards other players, moderators and organizers.</li>
-                <li>Organizers reserve the right to disqualify any team and its members.</li>
-                <li>Players cannot leave the teams they join once.</li>
-                <li>All communications will proceed through email and discord server.</li>
-                <li>The challenge will last a total of 24 hours.</li>
-            </ul>
+    <div class="heading">Team</div>
+    <div class="row">
+        <div class="content side">
+            <div class="heading"> Create Team</div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Team Name" maxlength="50"> <br>
+                <input type="submit" value="Create">
+            </form>
+        </div>
+        <div class="content side">
+            <div class="heading">Join Team</div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="text" name="tid" placeholder="Team ID" maxlength="8"> <br>
+                <input type="submit" value="Join">
+            </form>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% else %}
+<div class="main">
+    <div class="heading">Profile</div>
+    <div class="row">
+        <div class="content side">
+            User Name: {{user.name}} <br>
+            Team Name: {{user.team.name}} <br>
+            Team ID: {{user.team.tid}} <br>
+            Team Score: {{user.team.score}} <br>
+        </div>
+        <div class="content side">
+            Total Users: {{CTF.total_users}}<br>
+            Total Teams: {{CTF.total_teams}}<br>
+            Total Challenges: {{CTF.total_challenges}}<br>
+            Total Solves: {{CTF.total_solves}}<br>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="main">
+    <div class="heading">Rules</div>
+    <div class="content" style="text-align: left;">
+        <ul>
+            <li>Any attack on VoidCTF websites, servers or applications will result in immediate disqualification.</li>
+            <li>Sharing of challenge flags will result in immediate disqualification.</li>
+            <li>Teams will less than 2 members will not be eligible to recieve prizes.</li>
+            <li>Certificates & Prizes will be issued in the name provided while registration.</li>
+            <li>Information provided by the players should be accurate.</li>
+            <li>Players should be respectful towards other players, moderators and organizers.</li>
+            <li>Organizers reserve the right to disqualify any team and its members.</li>
+            <li>Players cannot leave the teams they join once.</li>
+            <li>All communications will proceed through email and discord server.</li>
+            <li>The challenge will last a total of 24 hours.</li>
+        </ul>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="https://kit.fontawesome.com/853e6dc438.js" crossorigin="anonymous"></script>
+{% endblock script %}
