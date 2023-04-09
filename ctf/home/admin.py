@@ -19,14 +19,18 @@ class Challenge(admin.ModelAdmin):
 
 @admin.register(Team)
 class Team(admin.ModelAdmin):
+    readonly_fields=('tid',)
     list_display = ("name", "score")
     list_filter = ("disqualified", )
     search_fields = ("tid__startswith", )
+    fields = ("tid","name","disqualified","score",)
 
 @admin.register(User)
 class User(admin.ModelAdmin):
+    readonly_fields=('email',"last_login")
     list_display = ("name","email","team")
     search_fields = ("email__startswith", )
+    fields = ("email","name","team","is_active","is_staff","is_superuser","user_permissions","groups","last_login")
 
 @admin.register(CTF)
 class CTF(admin.ModelAdmin):

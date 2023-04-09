@@ -43,7 +43,7 @@ class SignupView(TemplateView):
             login(request,user)
             return redirect("/dashboard")
         else:
-            return self.render_to_response({"form":form})
+            return self.render_to_response({"form":form,"CTF":CTF.objects.first()})
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -90,16 +90,19 @@ class DashboardView(LoginRequiredMixin,TemplateView):
     redirect_field_name = 'redirect_to'
 
     def get(self, request, *args, **kwargs):
-        if CTF.objects.first().started == True:
-            return super().get(request, *args, **kwargs)
-        elif request.user.team.disqualified:
+        if request.user.team != None and request.user.team.disqualified:
             return render(request,"disqualified.html")
+        elif CTF.objects.first().started == True:
+            return super().get(request, *args, **kwargs)
         else:
             return render(request,"timer.html")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["team"] = Team.objects.get(tid=self.request.user.team.tid)
+        try:
+            context["team"] = Team.objects.get(tid=self.request.user.team.tid)
+        except:
+            pass
         context["challenge"] = Challenge.objects.all()
         context["CTF"] = CTF.objects.first()
         return context

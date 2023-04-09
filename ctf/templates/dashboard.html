@@ -20,7 +20,12 @@ VoidCTF Dashboard
     </div>
 </div>
 {% endif %}
-{% if user.team != None %}
+{% if user.is_staff %}
+<div class="main">
+    <div class="heading">Admin User</div>
+    <div class="content">Login at <a href="/admin">Admin Panel</a></div>
+</div>
+{% elif user.team != None %}
     {% for item in challenge %}
         {% if item not in team.solved_challenges.all %}
             <div class="main {{item.cid}}">

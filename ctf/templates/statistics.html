@@ -6,6 +6,7 @@ VoidCTF Leaderboards
 {% block content %}
 <div class="main">
     <div class="heading">Challenges</div>
+    {% if challenge %}
     <div class="content" style="overflow-x:auto;">
         <table>
             <tr>
@@ -22,9 +23,13 @@ VoidCTF Leaderboards
                 {% endfor %}
         </table>
     </div>
+    {% else %}
+    <div class="content">No challenges released yet.</div>
+    {% endif %}
 </div>
 <div class="main">
     <div class="heading">Teams</div>
+    {% if team %}
     <div class="content">
         <i class="fa-solid fa-magnifying-glass"></i><input type="text" id="table_search" onkeyup="tableSearch()" placeholder="Team Name" style="width: 90% !important;"> <br> <br>
         <div class="content" style="overflow-x:auto;">
@@ -46,6 +51,11 @@ VoidCTF Leaderboards
             </table>
         </div>
     </div>
+    {% else %}
+    <div class="content">
+        No teams registered yet.
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}
 {% block script %}

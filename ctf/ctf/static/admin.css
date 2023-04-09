@@ -68,3 +68,6 @@ input[type="text"]:focus,input[type="password"]:focus{
 h1 > picture > img{
     width: 200px;
 }
+.select2-selection__choice__display{
+    color: black;
+}

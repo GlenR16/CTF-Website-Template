@@ -133,6 +133,9 @@ input[type="password"],input[type="email"],input[type="text"]{
     margin: 10px;
     width: 80%;
 }
+.errorlist{
+    list-style-position: inside;
+}
 p{
     margin: 0px;
 }
