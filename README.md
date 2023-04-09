@@ -19,6 +19,6 @@ You can use this template as long as you change the look of the UI.
 </ul>
 
 ### Notes
-If you use this template be sure to invite me to the CTF Competetion as well. \
+If you use this template be sure to invite me to the CTF Competition as well. \
 For now there is no hosted service based challenge. \
 Make pull requests if you have implemented a good feature.
